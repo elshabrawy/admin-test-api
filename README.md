@@ -37,4 +37,4 @@ The admin password is encoded using passwordEncoder.
 
 ## And here is the Flowchart for the security solution module:
 
-![](https://raw.github.com/elshabrawy/admin-test-api/blob/main/Security-chart.png)
+![alt text](https://github.com/elshabrawy/admin-test-api/blob/main/Security-chart.png?raw=true)
