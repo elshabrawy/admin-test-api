@@ -29,7 +29,7 @@ collection containing three APIs for testing:
 # Solution
 ### Solution points 
 - Adding security dependency: to activate the security module.
-- Adding WebSecurityConfig: to configure the beans that we will use in security module.
+- Adding WebSecurityConfig: to configure the beans that we will use in the security module.
 - Adding CustomUserDetailsService: to implements the UserDetailsService for loading the users with its roles.
 
 ### Additional Information
