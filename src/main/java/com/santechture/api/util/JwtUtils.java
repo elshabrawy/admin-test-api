@@ -1,5 +1,6 @@
 package com.santechture.api.util;
 
+import com.santechture.api.entity.Admin;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class JwtUtils {
@@ -23,12 +25,11 @@ public class JwtUtils {
   @Value("${santechture.app.jwtExpirationMs}")
   private int jwtExpirationMs;
 
-  public String generateJwtToken(Authentication authentication) {
-    UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
-
+  public String generateJwtToken(Admin admin, List<String> roles) {
     return Jwts.builder()
-        .setSubject((userPrincipal.getUsername()))
+        .setSubject((admin.getUsername()))
         .setIssuedAt(new Date())
+            .claim("roles",roles)
         .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
         .signWith(key(), SignatureAlgorithm.HS256)
         .compact();

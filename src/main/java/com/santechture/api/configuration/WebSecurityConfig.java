@@ -1,10 +1,12 @@
-package com.smartTec.config;
+package com.santechture.api.configuration;
 
-import java.util.Arrays;
-
+import com.santechture.api.service.CustomUserDetailsService;
+import com.santechture.api.util.AuthEntryPointJwt;
+import com.santechture.api.util.AuthTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -17,23 +19,13 @@ import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-import com.smartTec.models.security.jwt.AuthEntryPointJwt;
-import com.smartTec.models.security.jwt.AuthTokenFilter;
-import com.smartTec.models.security.services.UserDetailsServiceImpl;
 
 
 @Configuration
 @EnableMethodSecurity
-//@EnableWebMvc
 public class WebSecurityConfig {
   @Autowired
-  UserDetailsServiceImpl userDetailsService;
+  CustomUserDetailsService customUserDetailsService;
 
   @Autowired
   private AuthEntryPointJwt unauthorizedHandler;
@@ -42,14 +34,14 @@ public class WebSecurityConfig {
   public AuthTokenFilter authenticationJwtTokenFilter() {
     return new AuthTokenFilter();
   }
-  
+
   @Bean
   public DaoAuthenticationProvider authenticationProvider() {
       DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-       
-      authProvider.setUserDetailsService(userDetailsService);
+
+      authProvider.setUserDetailsService(customUserDetailsService);
       authProvider.setPasswordEncoder(passwordEncoder());
-   
+
       return authProvider;
   }
 
@@ -74,26 +66,13 @@ public class WebSecurityConfig {
             .exceptionHandling(exception->exception.authenticationEntryPoint(unauthorizedHandler))
             .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth->
-                            auth.requestMatchers("/api/auth/**").permitAll()
-                                    .requestMatchers("/api/test/**").permitAll()
-                                    .requestMatchers("/v3/**").permitAll()
-                                    .requestMatchers("/**").permitAll()
-//                  .requestMatchers("/swagger-ui/**").permitAll()
-//                  .requestMatchers("/api-docs/**").permitAll()
-//                  .requestMatchers("**/resources/**").permitAll()
-//                  .requestMatchers("/resources/**").permitAll()
-//                  .requestMatchers("resources/**").permitAll()
-//                  .requestMatchers("META-INF/resources/**").permitAll()
-//                  .requestMatchers("**/static/**").permitAll()
-//                  .requestMatchers("/webjars/**").permitAll()
-//                  .requestMatchers("**/swagger-ui.html").permitAll()
-                                         .anyRequest().authenticated()
+                            auth.requestMatchers("/admin").permitAll()
+                                    .requestMatchers(HttpMethod.GET,"/user").hasAnyRole("ADMIN", "USER")
+                                    .requestMatchers(HttpMethod.POST,"/user").hasAnyRole("ADMIN")
+                                     .anyRequest().authenticated()
             );
-    
     http.authenticationProvider(authenticationProvider());
-
     http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-    
     return http.build();
   }
 }
