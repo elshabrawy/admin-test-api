@@ -33,7 +33,8 @@ collection containing three APIs for testing:
 - Adding CustomUserDetailsService: to implement the UserDetailsService for loading the users with their roles.
 
 ### Additional Information
-The admin password is encoded using passwordEncoder.
+- The admin password is encoded using passwordEncoder.
+- added the postman collection in folder (postman-collection)
 
 ## And here is the Flowchart for the security solution module:
 
