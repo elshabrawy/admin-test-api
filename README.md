@@ -37,4 +37,4 @@ The admin password is encoded using passwordEncoder.
 
 ## And here is the Flowchart for the security solution module:
 
-![](D:\Security-chart.png)
+![](D:\workspace\SpringBoot_Assignment\admin-test-api\Security-chart.png)
